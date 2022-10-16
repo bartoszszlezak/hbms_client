@@ -1,0 +1,148 @@
+#LoginViewContainer {
+    height: 100vh;
+    width: 100vw;
+    background-image: linear-gradient(to right top, #009be5, #00aae7, #00b8e5, #00c5df, #00d1d6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.Title {
+    position: fixed;
+    top: 0;
+    text-align: center;
+    color: #fff;
+}
+
+#WalletIcon {
+    margin-right: 1em;
+}
+
+.LoginForm {
+    min-height: 40vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 30vw;
+    border: 1px solid gray;
+    border-radius: 1em;
+    padding: 2em 3em;
+    background-color: #ffffff;
+    -webkit-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.6);
+    box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.6);
+}
+
+.WelcomeText {
+    color: #505050;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 2px;
+    font-size: 1.5em;
+    margin: 0 0 0.5em 0;
+    text-align: center;
+}
+
+#LoginViewContainer h2{
+    font-size: 2em;
+    margin: 0 0 0.5em 0;
+    text-align: center;
+}
+
+.TextInput {
+    margin-top: 1em !important;
+    width: 80%;
+}
+
+.LoginButton {
+    width: 80%;
+    margin-top: 1em !important;
+    height: 3em;
+    background-image: linear-gradient(to right top, #009be5, #00aae7, #00b8e5, #00c5df, #00d1d6);
+}
+
+.BottomFormText {
+    width: 80%;
+    color: #505050;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin: 0.3em 0 0 0;
+}
+
+.Link{
+    color: darkblue;
+    text-decoration: underline;
+}
+
+@media (max-device-width: 450px) {
+    .Title {
+        font-size: 1.5em;
+    }
+
+    .LoginForm{
+        width: 90vw;
+        box-sizing: border-box;
+        padding: 2em;
+    }
+    .WelcomeText {
+        font-size: 1.2em;
+    }
+    #LoginViewContainer h2{
+        font-size: 1.3em;
+        margin: 0 0 0.5em 0;
+    }
+    .TextInput {
+        width: 100%;
+    }
+    .LoginButton {
+        width: 100%;
+    }
+    .BottomFormText {
+        width: 100%;
+    }
+}
+
+@media (max-device-width: 575px) and (min-device-width: 451px) {
+    .Title {
+        font-size: 1.5em;
+    }
+    .LoginForm{
+        width: 90vw;
+        box-sizing: border-box;
+    }
+    #LoginViewContainer h2{
+        font-size: 1.8em;
+        margin: 0 0 0.5em 0;
+    }
+    .TextInput {
+        width: 100%;
+    }
+    .LoginButton {
+        width: 100%;
+    }
+    .BottomFormText {
+        width: 100%;
+    }
+}
+
+@media (max-device-width: 800px) and (min-device-width: 576px) {
+    .LoginForm{
+        width: 60vw;
+    }
+    .TextInput {
+        width: 100%;
+    }
+    .LoginButton {
+        width: 100%;
+    }
+    .BottomFormText {
+        width: 100%;
+    }
+}
+
+@media (max-device-width: 1300px) and (min-device-width: 801px) {
+    .LoginForm{
+        width: 45vw;
+    }
+}
