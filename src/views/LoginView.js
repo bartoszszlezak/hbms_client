@@ -9,13 +9,13 @@ import PasswordField from "../components/PasswordField";
 
 const LoginView = (props) => {
     const [formData, setFormData] = useState({
-        email: "adam@",
-        password: "adam123!"
+        email: "",
+        password: ""
     })
     const [logged, setLogged] = useState(false);
 
     useEffect(() => {
-        if (props.location.message) {
+        if (props?.location?.message) {
             setTimeout(() => {
                 alert(props.location.message);
             }, 100)

@@ -9,7 +9,7 @@ import "./index.css"
 ReactDOM.render(
     <BrowserRouter>
         <Routes>
-            <Route exact path="/login" render={(props) => <LoginView {...props}/>}/>
+            <Route exact path="/" element={<LoginView/>}/>
         </Routes>
     </BrowserRouter>,
     document.getElementById('root')
