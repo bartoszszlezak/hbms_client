@@ -1,0 +1,33 @@
+.Navigation {
+    color: #BBB7B7;
+}
+
+.Navigation h2 {
+    font-size: 1.3em;
+    margin: 1em 0.5em 0.5em 0.5em;
+}
+
+.NavigationTitle h1 {
+    margin: 1em 1em 1em 1em;
+    font-style: italic;
+}
+
+.IconBox {
+    height: 100%;
+    width: 50%;
+    text-align: center;
+    color: #BBB7B7;
+    font-size: 1.2em;
+}
+
+.LightDivider {
+    background-color: #BBB7B7 !important;
+}
+
+#selected, #selected .IconBox {
+    color: #009BE5 !important;
+}
+
+.NavItem:hover {
+    background-color: rgba(187, 183, 183, 0.1) !important;
+}
