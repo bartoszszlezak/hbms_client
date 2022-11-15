@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import LoginView from "./views/LoginView";
+import RegistrationView from "./views/RegistrationView";
 import "./index.css"
 
 
@@ -10,6 +11,7 @@ ReactDOM.render(
     <BrowserRouter>
         <Routes>
             <Route exact path="/" element={<LoginView/>}/>
+            <Route exact path="/registration" element={<RegistrationView/>}/>
         </Routes>
     </BrowserRouter>,
     document.getElementById('root')

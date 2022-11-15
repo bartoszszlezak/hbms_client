@@ -1,4 +1,4 @@
-#LoginViewContainer {
+#LoginViewContainer,#RegistrationViewContainer {
     height: 100vh;
     width: 100vw;
     background-image: linear-gradient(to right top, #009be5, #00aae7, #00b8e5, #00c5df, #00d1d6);
@@ -19,7 +19,7 @@
     margin-right: 1em;
 }
 
-.LoginForm {
+.LoginForm,.RegistrationForm {
     min-height: 40vh;
     display: flex;
     flex-direction: column;
@@ -44,7 +44,7 @@
     text-align: center;
 }
 
-#LoginViewContainer h2{
+#LoginViewContainer h2,#RegistrationViewContainer h2 {
     font-size: 2em;
     margin: 0 0 0.5em 0;
     text-align: center;
@@ -80,7 +80,7 @@
         font-size: 1.5em;
     }
 
-    .LoginForm{
+    .LoginForm,.RegistrationForm {
         width: 90vw;
         box-sizing: border-box;
         padding: 2em;
@@ -88,7 +88,7 @@
     .WelcomeText {
         font-size: 1.2em;
     }
-    #LoginViewContainer h2{
+    #LoginViewContainer h2,#RegistrationViewContainer h2 {
         font-size: 1.3em;
         margin: 0 0 0.5em 0;
     }
@@ -107,11 +107,11 @@
     .Title {
         font-size: 1.5em;
     }
-    .LoginForm{
+    .LoginForm,.RegistrationForm {
         width: 90vw;
         box-sizing: border-box;
     }
-    #LoginViewContainer h2{
+    #LoginViewContainer h2,#RegistrationViewContainer h2 {
         font-size: 1.8em;
         margin: 0 0 0.5em 0;
     }
@@ -127,7 +127,7 @@
 }
 
 @media (max-device-width: 800px) and (min-device-width: 576px) {
-    .LoginForm{
+    .LoginForm,.RegistrationForm {
         width: 60vw;
     }
     .TextInput {
@@ -142,7 +142,7 @@
 }
 
 @media (max-device-width: 1300px) and (min-device-width: 801px) {
-    .LoginForm{
+    .LoginForm,.RegistrationForm {
         width: 45vw;
     }
 }
