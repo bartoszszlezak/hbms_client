@@ -12,6 +12,7 @@ const LoginView = (props) => {
         email: "",
         password: ""
     })
+    // eslint-disable-next-line
     const [logged, setLogged] = useState(false);
 
     useEffect(() => {
@@ -20,7 +21,7 @@ const LoginView = (props) => {
                 alert(props.location.message);
             }, 100)
         }
-    }, [])
+    }, [props?.location?.message])
 
 
     function handleChange(event) {

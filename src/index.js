@@ -5,16 +5,25 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import LoginView from "./views/LoginView";
 import RegistrationView from "./views/RegistrationView";
 import "./index.css"
-
+import Error404 from "./views/Error404";
+import WithContainer from "./views/WithContainer";
+import CategoriesView from "./views/CategoriesView";
 
 ReactDOM.render(
-    <BrowserRouter>
-        <Routes>
-            <Route exact path="/" element={<LoginView/>}/>
-            <Route exact path="/registration" element={<RegistrationView/>}/>
-        </Routes>
-    </BrowserRouter>,
-    document.getElementById('root')
+  <BrowserRouter>
+    <Routes>
+      <Route>
+        <Route index element={<LoginView/>}/>
+        <Route path="registration" element={<RegistrationView/>}/>
+        <Route path="user" element={<WithContainer/>}>
+          <Route path="categories" element={<CategoriesView/>}/>
+        </Route>
+        <Route path="*" element={<Error404/>}/>
+      </Route>
+
+    </Routes>
+  </BrowserRouter>,
+  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
