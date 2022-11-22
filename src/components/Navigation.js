@@ -13,13 +13,13 @@ const dataForList = [
     text: "Transactions",
     icon: <div className="IconBox"><FontAwesomeIcon icon={faWallet}/></div>,
     index: 1,
-    link: "/categories"
+    link: "categories"
   },
   {
     text: "Budgets",
     icon: <div className="IconBox"><FontAwesomeIcon icon={faPiggyBank}/></div>,
     index: 2,
-    link: "/budgets"
+    link: "budgets"
   },
   {
     text: "Summary",
@@ -91,7 +91,7 @@ const Navigation = (props) => {
       <Divider className="LightDivider"/>
       <h2>Finances</h2>
       <List>
-        {dataForList.slice(0, 3).map((item) => (
+        {dataForList.slice(0, 2).map((item) => (
           <Link to={item.link} className={classes.link} key={item.text}>
             <ListItem button id={selected === item.index ? "selected" : ""}
                       className="NavItem">
@@ -101,19 +101,19 @@ const Navigation = (props) => {
           </Link>
         ))}
       </List>
-      <Divider className="LightDivider"/>
-      <h2>About me</h2>
-      <List>
-        {dataForList.slice(3, 6).map((item) => (
-          <Link to={item.link} className={classes.link} key={item.text}>
-            <ListItem button id={selected === item.index ? "selected" : ""}
-                      className="NavItem">
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text}/>
-            </ListItem>
-          </Link>
-        ))}
-      </List>
+      {/*<Divider className="LightDivider"/>*/}
+      {/*<h2>About me</h2>*/}
+      {/*<List>*/}
+      {/*  {dataForList.slice(3, 6).map((item) => (*/}
+      {/*    <Link to={item.link} className={classes.link} key={item.text}>*/}
+      {/*      <ListItem button id={selected === item.index ? "selected" : ""}*/}
+      {/*                className="NavItem">*/}
+      {/*        <ListItemIcon>{item.icon}</ListItemIcon>*/}
+      {/*        <ListItemText primary={item.text}/>*/}
+      {/*      </ListItem>*/}
+      {/*    </Link>*/}
+      {/*  ))}*/}
+      {/*</List>*/}
       <Divider className="LightDivider"/>
       <List>
         {dataForList.slice(6, 7).map((item) => (
