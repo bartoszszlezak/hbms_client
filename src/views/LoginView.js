@@ -5,6 +5,8 @@ import {faWallet} from '@fortawesome/free-solid-svg-icons'
 import {Link, Navigate} from 'react-router-dom';
 import "../css/views/LoginAndRegistrationView.css"
 import PasswordField from "../components/PasswordField";
+import axios from "axios";
+import {authTokenName, loginUserUrl} from "../assets/properties";
 
 
 const LoginView = (props) => {
@@ -23,12 +25,28 @@ const LoginView = (props) => {
         }
     }, [props?.location?.message])
 
+    function handleClick() {
+        axios.post(loginUserUrl, formData)
+          .then(resp => {
+              localStorage.setItem(authTokenName, resp.data);
+              setLogged(true);
+          })
+          .catch(() => {
+              alert("Wrong email or password");
+          })
+
+        setFormData({
+            email: "",
+            password: ""
+        });
+    }
+
 
     function handleChange(event) {
         setFormData(prev => ({...prev, [event.target.name]: event.target.value}));
     }
 
-    return (logged ? <Navigate to="/categories"/> :
+    return (logged ? <Navigate to="user/categories"/> :
             <div id="LoginViewContainer">
                 <h1 className="Title"><FontAwesomeIcon icon={faWallet} id="WalletIcon"/>My Little Savings</h1>
                 <form className="LoginForm" autoComplete="off">
@@ -38,7 +56,7 @@ const LoginView = (props) => {
                                value={formData.email} onChange={handleChange}/>
                     <PasswordField name="password" placeholder="Password" labelWidth={70} value={formData.password}
                                    onChange={handleChange}/>
-                    <Button className="LoginButton" variant="contained" color="primary">
+                    <Button className="LoginButton" variant="contained" color="primary" onClick={handleClick}>
                         Login
                     </Button>
                     <p className="BottomFormText">Not registered yet?

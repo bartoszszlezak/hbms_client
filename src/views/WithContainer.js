@@ -2,7 +2,9 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import React, {useEffect, useState} from "react";
 import Navigation from "../components/Navigation";
 import Header from "../components/Header";
-import {Outlet} from "react-router-dom";
+import {Navigate, Outlet} from "react-router-dom";
+import axios from "axios";
+import {authTokenName, getLoggedUsernameUrl, unauthorizedMessage} from "../assets/properties";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -22,31 +24,52 @@ const useStyles = makeStyles((theme) => ({
 
 const WithContainer = () => {
   const classes = useStyles();
-  const [isLogged, setIsLogged] = useState(false);
-  const [userName, setUserName] = useState("");
+  const [loggedUsername, setLoggedUsername] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [logged, setLogged] = useState({
+    redirect: false,
+    message: ""
+  });
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const jwtConfig = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem(authTokenName)
+    }
+  };
+
   // Get jwt token
-  useEffect(() => {}, []);
+  useEffect(() => {
+    axios.get(getLoggedUsernameUrl, jwtConfig)
+      .then(resp => setLoggedUsername(resp.data.username))
+      .catch(() => {
+        setLogged(() => ({
+          redirect: true,
+          message: unauthorizedMessage
+        }));
+      })
+  }, [])
 
   return (
+    logged.redirect ?
+        <Navigate to="/"/>
+      :
     <div className={classes.container}>
       <Navigation data={{
         selected: 1,
         mobileOpen: mobileOpen,
         handleDrawerToggle: handleDrawerToggle,
-        setLogged: setIsLogged
+        setLogged: setLogged
       }}/>
       <Header data={{
         title: "Transactions",
         handleDrawerToggle: handleDrawerToggle,
-        username: userName
+        username: loggedUsername
       }}/>
-      <Outlet context={{isLogged, setIsLogged, setUserName}}/>
+      <Outlet context={{logged, setLogged, setLoggedUsername}}/>
     </div>
   )
 }

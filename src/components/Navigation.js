@@ -48,6 +48,7 @@ const dataForList = [
   {
     text: "Log out",
     icon: <div className="IconBox"><FontAwesomeIcon icon={faSignOutAlt}/></div>,
+    index: 7,
   }
 ]
 
