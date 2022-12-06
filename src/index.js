@@ -9,6 +9,7 @@ import Error404 from "./views/Error404";
 import WithContainer from "./views/WithContainer";
 import CategoriesView from "./views/CategoriesView";
 import TransactionView from "./views/TransactionsView";
+import BudgetsView from "./views/BudgetsView";
 
 ReactDOM.render(
   <BrowserRouter>
@@ -19,6 +20,7 @@ ReactDOM.render(
         <Route path="user" element={<WithContainer/>}>
           <Route path="categories" element={<CategoriesView/>}/>
           <Route path="transactions" element={<TransactionView/>}/>
+          <Route path="budgets" element={<BudgetsView/>}/>
         </Route>
         <Route path="*" element={<Error404/>}/>
       </Route>

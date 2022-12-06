@@ -70,8 +70,33 @@ const BudgetsView = () => {
     const [isPremiumUser, setIsPremiumUser] = useState(true)
     const [open, setOpen] = useState(false);
     const [budgetsList, setBudgetsList] = useState({
-        isLoaded: false,
-        data: []
+        isLoaded: true,
+        data: [
+            {
+                icon: "faShoppingCart",
+                color: "#F8A648",
+                typeName: "Shopping",
+                value: 1000.0,
+                spentValue: 500.0,
+                progress: 50
+            },
+            {
+                icon: "faSmileBeam",
+                color: "#4848F8",
+                typeName: "Entertainment",
+                value: 2000.0,
+                spentValue: 500.0,
+                progress: 25
+            },
+            {
+                icon: "faPlane",
+                color: "#38C21E",
+                typeName: "Travel",
+                value: 400.0,
+                spentValue: -100.0,
+                progress: 100
+            },
+        ]
     })
     const [selectedBudget, setSelectedBudget] = useState([])
     const [selectedBudgetValue, setSelectedBudgetValue] = useState("")
