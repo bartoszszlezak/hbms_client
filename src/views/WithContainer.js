@@ -47,7 +47,7 @@ const WithContainer = () => {
       .then(resp => setLoggedUsername(resp.data.username))
       .catch(() => {
         setLogged(() => ({
-          redirect: true,
+          redirect: false,
           message: unauthorizedMessage
         }));
       })

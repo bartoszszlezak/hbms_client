@@ -10,6 +10,9 @@ export const getCategoryTypesURL = apiBaseURL + "categories/getAllTypes";
 export const postCategory = apiBaseURL + "categories/add";
 export const deleteCategoryURL = apiBaseURL + "categories/delete/{id}?id=";
 
+export const getTransactions = apiBaseURL + "transactions/getAll/{id}?id=";
+export const postTransaction = apiBaseURL + "transactions/add/{id}?id=";
+export const deleteTransactionURL = apiBaseURL + "transactions/delete/{id}?id="
 
 export const authTokenName = "jwtToken";
 export const unauthorizedMessage = "Unauthorized entry";

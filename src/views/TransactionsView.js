@@ -18,7 +18,10 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus,} from "@fortawesome/free-solid-svg-icons";
 import Transaction from "../components/Transaction";
 import {Link, useParams} from 'react-router-dom';
+import axios from "axios";
+import {confirmDeleteMessage, deleteTransactionURL, getTransactions, postTransaction} from "../assets/properties";
 import iconPicker from "../assets/iconPicker";
+import date from 'date-and-time';
 import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
 
 const useStyles = makeStyles((theme) => ({
@@ -67,22 +70,18 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+
 function comparator(a, b) {
   return (a.day > b.day) ? 1 : (a.day === b.day) ? ((a.day > b.day) ? 1 : -1) : -1
 }
 
-
-
 const TransactionView = () => {
   const classes = useStyles();
+  const {id} = useParams();
   const [open, setOpen] = useState(false);
-  const [category, setCategory] = useState({
-    icon: "faShoppingCart",
-    color: "#F8A648",
-    typeName: "Shopping"
-  });
+  const [category, setCategory] = useState({});
   const [transactionsList, setTransactionsList] = useState({
-    isLoaded: true,
+    isLoaded: false,
     data: [
       {
         id:1,
@@ -105,13 +104,74 @@ const TransactionView = () => {
     value: "",
     day: ""
   });
+  const jwtConfig = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("jwtToken")
+    }
+  };
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    axios.get(getTransactions + id, jwtConfig)
+      .then(resp => {
+        let {transactions, ...categoryInfo} = resp.data;
+        let [year, month] = categoryInfo.date.split("-");
 
-  const handleAddTransaction = () => {}
+        transactions = transactions.map(t => {
+          const dataObject = new Date(year, month - 1, t.day);
+          return {
+            ...t,
+            date: date.format(dataObject, 'dddd, MMMM YYYY'),
+            value: t.value.toFixed(2),
+            day: parseInt(t.day).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
+          }
+        })
 
-  const handleDeleteTransaction = (id) => {
+        setCategory(categoryInfo);
+        setTransactionsList({isLoaded: true, data: transactions.sort(comparator)});
+      })
+  }, [])
 
+  const handleAddTransaction = () => {
+    const {name, value, day} = transaction;
+    if (name !== "" && value !== "" && day !== "") {
+      axios.post(postTransaction + id, transaction, jwtConfig)
+        .then(resp => {
+          let [year, month] = category.date.split("-");
+          setTransactionsList(prev => {
+            const dataObject = new Date(year, month - 1, resp.data.day);
+            const newTransaction = {
+              ...resp.data,
+              date: date.format(dataObject, 'dddd, MMMM YYYY'),
+              value: resp.data.value.toFixed(2),
+              day: parseInt(resp.data.day).toLocaleString('en-US', {
+                minimumIntegerDigits: 2,
+              })
+            }
+            return {
+              isLoaded: true,
+              data: [...prev.data, newTransaction].sort(comparator)
+            }
+          });
+        });
+
+      setOpen(false);
+      setTransaction({
+        name: "",
+        value: "",
+        day: ""
+      });
+    } else {
+      alert("Fill all inputs")
+    }
+  }
+
+  function handleDeleteTransaction(id) {
+    if (window.confirm(confirmDeleteMessage)) {
+      axios.delete(deleteTransactionURL + id, jwtConfig)
+        .then(() => {
+          setTransactionsList(prev => ({...prev, data: prev.data.filter(t => t.id !== id)}))
+        })
+    }
   }
 
   const handleClickOpen = () => {
@@ -156,7 +216,7 @@ const TransactionView = () => {
     <div>
       <Paper elevation={5} classes={{root: classes.card}}>
         <div className={classes.cardHeader}>
-          <Link to={{pathname: "/user/categories", initialDate: category.date}} className={classes.link}>
+          <Link to={{pathname: "/categories", initialDate: category.date}} className={classes.link}>
             <div className={classes.headerTitle}>
               <Avatar classes={{root: classes.avatarHeader}} style={{background: category.color}}>
                 <FontAwesomeIcon icon={iconPicker(category.icon)} style={{color: "#ffffff"}}/>

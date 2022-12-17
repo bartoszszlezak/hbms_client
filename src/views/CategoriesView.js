@@ -21,6 +21,15 @@ import {
 } from "@material-ui/core";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import {
+  authTokenName,
+  confirmDeleteMessage,
+  deleteCategoryURL,
+  getCategoriesURL,
+  getCategoryTypesURL,
+  postCategory
+} from "../assets/properties";
 import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
 import iconPicker from "../assets/iconPicker";
 
@@ -95,17 +104,83 @@ const CategoriesView = (props) => {
         color: "#38C21E",
         typeName: "Travel",
         transactionsValue: -500.0
-      },
+      }
     ]
   });
-  const [date, setDate] = useState("");
+  const jwtConfig = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem(authTokenName)
+    }
+  };
 
-  // Get jwt token
-  useEffect(() => {}, [])
+  //todo
+  const [date, setDate] = useState("")
+  // const [date, setDate] = useState(() => {
+  //   if (props.location.initialDate) {
+  //     return props.location.initialDate;
+  //   }
+  //   const now = new Date();
+  //   const month = (now.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2})
+  //   return now.getFullYear() + "-" + month;
+  // });
 
-  const handleAddCategory = () => {}
+  useEffect(() => {
+    setCategories({
+      isLoaded: false,
+      data: []
+    });
 
-  const handleDeleteCategory = (categoryId) => {}
+    axios.get(getCategoriesURL + date, jwtConfig)
+      .then(resp => {
+        setCategories({
+          isLoaded: true,
+          data: resp.data.map(el => ({...el, transactionsValue: el.transactionsValue.toFixed(2)}))
+        });
+      })
+  }, [date])
+
+  useEffect(() => {
+    axios.get(getCategoryTypesURL, jwtConfig)
+      .then(resp => {
+        setCategoriesTypes(resp.data);
+      })
+  }, [])
+
+  const handleAddCategory = () => {
+    if (selectedCategory.length !== 0) {
+      axios.post(postCategory, {
+        ...selectedCategory,
+        date: date
+      }, jwtConfig)
+        .then(resp => {
+          setCategories((prev) => ({
+            isLoaded: true,
+            data: [
+              ...prev.data,
+              {...resp.data, transactionsValue: resp.data.transactionsValue.toFixed(2)}
+            ]
+          }));
+        });
+
+      setOpen(false);
+      setSelectedCategory([]);
+    } else {
+      alert("No category was selected");
+    }
+  }
+
+  function handleDeleteCategory(categoryId) {
+    if (window.confirm(confirmDeleteMessage)) {
+      axios.delete(deleteCategoryURL + categoryId, jwtConfig)
+        .then(() => {
+          setCategories(prev => ({
+            ...prev,
+            data: prev.data.filter(category => category.id !== categoryId)
+          }))
+        })
+    }
+
+  }
 
   const handleClose = () => {
     setOpen(false);
