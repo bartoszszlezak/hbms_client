@@ -15,3 +15,7 @@ export const authTokenName = "jwtToken";
 export const unauthorizedMessage = "Unauthorized entry";
 export const confirmDeleteMessage = "Are you sure u want to delete this?"
 export const loggedOutMessage = "Logged out";
+
+export const getBudgetsURL = apiBaseURL + "budgets/getAll/{date}?date="
+export const postBudgetURL = apiBaseURL + "budgets/add"
+export const deleteBudgetURL = apiBaseURL + "budgets/delete/{id}?id="

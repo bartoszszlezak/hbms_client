@@ -20,6 +20,14 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus,} from "@fortawesome/free-solid-svg-icons";
 import Budget from "../components/Budget";
+import axios from "axios";
+import {
+    confirmDeleteMessage,
+    deleteBudgetURL,
+    getBudgetsURL,
+    getCategoryTypesURL,
+    postBudgetURL
+} from "../assets/properties";
 import SentimentDissatisfiedIcon from "@material-ui/icons/SentimentDissatisfied";
 import iconPicker from "../assets/iconPicker";
 import PanToolIcon from '@material-ui/icons/PanTool';
@@ -70,33 +78,8 @@ const BudgetsView = () => {
     const [isPremiumUser, setIsPremiumUser] = useState(true)
     const [open, setOpen] = useState(false);
     const [budgetsList, setBudgetsList] = useState({
-        isLoaded: true,
-        data: [
-            {
-                icon: "faShoppingCart",
-                color: "#F8A648",
-                typeName: "Shopping",
-                value: 1000.0,
-                spentValue: 500.0,
-                progress: 50
-            },
-            {
-                icon: "faSmileBeam",
-                color: "#4848F8",
-                typeName: "Entertainment",
-                value: 2000.0,
-                spentValue: 500.0,
-                progress: 25
-            },
-            {
-                icon: "faPlane",
-                color: "#38C21E",
-                typeName: "Travel",
-                value: 400.0,
-                spentValue: -100.0,
-                progress: 100
-            },
-        ]
+        isLoaded: false,
+        data: []
     })
     const [selectedBudget, setSelectedBudget] = useState([])
     const [selectedBudgetValue, setSelectedBudgetValue] = useState("")
@@ -106,6 +89,81 @@ const BudgetsView = () => {
         const month = (now.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2})
         return now.getFullYear() + "-" + month;
     });
+    const jwtConfig = {
+        headers: {
+            Authorization: "Bearer " + localStorage.getItem("jwtToken")
+        }
+    };
+
+    useEffect(() => {
+        setBudgetsList({
+            isLoaded: false,
+            data: []
+        })
+
+        axios.get(getBudgetsURL + date, jwtConfig)
+            .then(resp => {
+                let budgets = resp.data.map(budget => {
+                    budget.value = parseFloat(budget.value).toFixed(2);
+                    budget.spentValue = budget.spentValue < 0 ? (parseFloat(budget.value) + parseFloat(budget.spentValue)).toFixed(2) : (budget.value);
+                    budget.progress = ((parseFloat(budget.value) - parseFloat(budget.spentValue)) / parseFloat(budget.value)) * 100;
+                    budget.progress = budget.progress > 100 ? 100 : budget.progress;
+                    return {...budget}
+                })
+
+                setBudgetsList({
+                    isLoaded: true,
+                    data: [...budgets]
+                })
+            })
+            .catch(() => {
+                setIsPremiumUser(false)
+            })
+    }, [date])
+
+    useEffect(() => {
+        axios.get(getCategoryTypesURL, jwtConfig)
+            .then(resp => {
+                setCategoriesTypes(resp.data);
+            })
+    }, [])
+
+    function handleAddBudget() {
+        if (selectedBudgetValue !== "" && selectedBudget.length !== 0) {
+            axios.post(postBudgetURL, {
+                ...selectedBudget,
+                date: date,
+                value: selectedBudgetValue,
+            }, jwtConfig)
+                .then(resp => {
+                    let data = resp.data;
+                    data.value = parseFloat(data.value).toFixed(2);
+                    data.spentValue = data.spentValue < 0 ? (parseFloat(data.value) + parseFloat(data.spentValue)).toFixed(2) : data.value;
+                    data.progress = (((parseFloat(data.value) - parseFloat(data.spentValue)) / parseFloat(data.value)) * 100);
+                    data.progress = data.progress > 100 ? 100 : data.progress;
+                    setBudgetsList(prev => ({
+                        isLoaded: true,
+                        data: [...prev.data, data]
+
+                    }))
+                })
+
+            setOpen(false);
+            setSelectedBudget([])
+            setSelectedBudgetValue("");
+        } else {
+            alert("Fill all inputs")
+        }
+    }
+
+    function handleDeleteBudget(id) {
+        if (window.confirm(confirmDeleteMessage)) {
+            axios.delete(deleteBudgetURL + id, jwtConfig)
+                .then(() => {
+                    setBudgetsList(prev => ({...prev, data: prev.data.filter(b => b.id !== id)}))
+                })
+        }
+    }
 
     const handleClose = () => {
         setOpen(false);
@@ -201,8 +259,7 @@ const BudgetsView = () => {
                                     <Button onClick={handleClose} color="primary">
                                         Cancel
                                     </Button>
-                                     {/* add onCLick  */}
-                                    <Button color="primary">
+                                    <Button onClick={handleAddBudget} color="primary">
                                         Confirm
                                     </Button>
                                 </DialogActions>
@@ -231,7 +288,7 @@ const BudgetsView = () => {
                                             <Budget
                                                 key={index}
                                                 data={budget}
-                                                // add onCLick for deleting budgets
+                                                handleDeleteBudget={handleDeleteBudget}
                                             />)
                             }
                         </List>
