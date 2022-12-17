@@ -1,7 +1,7 @@
 import React from "react";
 import {Divider, Drawer, List, ListItem, ListItemIcon, ListItemText} from "@material-ui/core";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCog, faFileAlt, faPiggyBank, faSignOutAlt, faTv, faUser, faWallet} from "@fortawesome/free-solid-svg-icons";
+import {faPiggyBank, faSignOutAlt, faWallet} from "@fortawesome/free-solid-svg-icons";
 import "../css/components/Navigation.css";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Link} from 'react-router-dom';
@@ -22,33 +22,9 @@ const dataForList = [
     link: "budgets"
   },
   {
-    text: "Summary",
-    icon: <div className="IconBox"><FontAwesomeIcon icon={faFileAlt}/></div>,
-    index: 3,
-    link: "/summary"
-  },
-  {
-    text: "My profile",
-    icon: <div className="IconBox"><FontAwesomeIcon icon={faUser}/></div>,
-    index: 4,
-    link: "#"
-  },
-  {
-    text: "Theme",
-    icon: <div className="IconBox"><FontAwesomeIcon icon={faTv}/></div>,
-    index: 5,
-    link: "#"
-  },
-  {
-    text: "Settings",
-    icon: <div className="IconBox"><FontAwesomeIcon icon={faCog}/></div>,
-    index: 6,
-    link: "#"
-  },
-  {
     text: "Log out",
     icon: <div className="IconBox"><FontAwesomeIcon icon={faSignOutAlt}/></div>,
-    index: 7,
+    index: 3,
   }
 ]
 
@@ -102,22 +78,9 @@ const Navigation = (props) => {
           </Link>
         ))}
       </List>
-      {/*<Divider className="LightDivider"/>*/}
-      {/*<h2>About me</h2>*/}
-      {/*<List>*/}
-      {/*  {dataForList.slice(3, 6).map((item) => (*/}
-      {/*    <Link to={item.link} className={classes.link} key={item.text}>*/}
-      {/*      <ListItem button id={selected === item.index ? "selected" : ""}*/}
-      {/*                className="NavItem">*/}
-      {/*        <ListItemIcon>{item.icon}</ListItemIcon>*/}
-      {/*        <ListItemText primary={item.text}/>*/}
-      {/*      </ListItem>*/}
-      {/*    </Link>*/}
-      {/*  ))}*/}
-      {/*</List>*/}
       <Divider className="LightDivider"/>
       <List>
-        {dataForList.slice(6, 7).map((item) => (
+        {dataForList.slice(2, 3).map((item) => (
           <ListItem button key={item.text} id={selected === item.index ? "selected" : ""}
                     className="NavItem" onClick={handleLoggedOut}>
             <ListItemIcon>{item.icon}</ListItemIcon>
