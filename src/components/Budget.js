@@ -47,40 +47,40 @@ const Budget = (props) => {
             backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
         },
         bar: props.data.spentValue > 0 ?
-            {
-                borderRadius: 5,
-                backgroundColor: '#1a90ff',
-            } :
-            {
-                borderRadius: 5,
-                backgroundColor: '#FB0A43',
-            }
+          {
+              borderRadius: 5,
+              backgroundColor: '#1a90ff',
+          } :
+          {
+              borderRadius: 5,
+              backgroundColor: '#FB0A43',
+          }
     }))(LinearProgress);
 
     return (
-        <ListItem button classes={{root: classes.listItem}}>
-            <ListItemAvatar>
-                <Avatar classes={{root: classes.avatar}} style={{background: props.data.color}}>
-                    <FontAwesomeIcon icon={iconPicker(props.data.icon)} style={{color: "#ffffff"}}/>
-                </Avatar>
-            </ListItemAvatar>
-            <div style={{width: "80%"}}>
-                <ListItemText primary={props.data.typeName} classes={{primary: classes.budgetTitle}}/>
-                <BorderLinearProgress variant="determinate" value={props.data.progress}/>
-            </div>
-            <ListItemText primary={`${props.data.value} zł`}
-                          secondary={
-                              props.data.spentValue > 0 ?
-                                  `Left ${props.data.spentValue} zł` :
-                                  `Over ${Math.abs(props.data.spentValue).toFixed(2)} zł`
-                          }
-                          classes={{root: classes.budgetValueAlign, primary: classes.budgetValue}}/>
-            <IconButton color="secondary" component="span" style={{marginLeft: 5}} onClick={() => {
-                props.handleDeleteBudget(props.data.id)
-            }}>
-                <Delete/>
-            </IconButton>
-        </ListItem>
+      <ListItem button classes={{root: classes.listItem}}>
+          <ListItemAvatar>
+              <Avatar classes={{root: classes.avatar}} style={{background: props.data.color}}>
+                  <FontAwesomeIcon icon={iconPicker(props.data.icon)} style={{color: "#ffffff"}}/>
+              </Avatar>
+          </ListItemAvatar>
+          <div style={{width: "70%"}}>
+              <ListItemText primary={props.data.typeName} classes={{primary: classes.budgetTitle}}/>
+              <BorderLinearProgress variant="determinate" value={props.data.progress}/>
+          </div>
+          <ListItemText primary={`${props.data.value} zł`}
+                        secondary={
+                            props.data.spentValue > 0 ?
+                              `Left ${props.data.spentValue} zł` :
+                              `Over ${Math.abs(props.data.spentValue).toFixed(2)} zł`
+                        }
+                        classes={{root: classes.budgetValueAlign, primary: classes.budgetValue}}/>
+          <IconButton color="secondary" component="span" style={{marginLeft: 5}} onClick={() => {
+              props.handleDeleteBudget(props.data.id)
+          }}>
+              <Delete/>
+          </IconButton>
+      </ListItem>
     )
 }
 

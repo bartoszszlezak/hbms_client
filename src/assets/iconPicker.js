@@ -3,7 +3,9 @@ import {
   faSmileBeam,
   faPlane,
   faFileInvoiceDollar,
-  faTshirt,
+  faCar,
+  faMoneyBill,
+  faUserNurse
 } from "@fortawesome/free-solid-svg-icons";
 
 const iconPicker = (iconName) => {
@@ -12,7 +14,9 @@ const iconPicker = (iconName) => {
     case "faSmileBeam": return faSmileBeam;
     case "faPlane": return faPlane;
     case "faFileInvoiceDollar": return faFileInvoiceDollar;
-    case "faTshirt": return faTshirt;
+    case "faUserNurse": return faUserNurse;
+    case "faMoneyBill": return faMoneyBill;
+    case "faCar": return faCar;
     default: return null;
   }
 }

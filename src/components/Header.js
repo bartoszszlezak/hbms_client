@@ -7,6 +7,7 @@ import AppBar from "@material-ui/core/AppBar";
 import IconButton from "@material-ui/core/IconButton";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBars} from "@fortawesome/free-solid-svg-icons";
+import {deepPurple} from "@material-ui/core/colors";
 
 const drawerWidth = 240;
 
@@ -41,6 +42,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   toolbar: theme.mixins.toolbar,
+  purple: {
+    color: theme.palette.getContrastText(deepPurple[500]),
+    backgroundColor: deepPurple[500],
+  },
 }));
 
 const Header = (props) => {
@@ -65,9 +70,8 @@ const Header = (props) => {
         <div className="InnerDiv">
           <div className="UserDiv">
             <span>{username}</span>
-            <Avatar src="/Avatar.jpg" sizes="big" classes={{root: classes.avatar}}/>
+            <Avatar className={classes.purple}>{username[0]}</Avatar>
           </div>
-          <span>Your wallet: 2547.55zł</span>
         </div>
       </Paper>
     </AppBar>

@@ -82,22 +82,7 @@ const TransactionView = () => {
   const [category, setCategory] = useState({});
   const [transactionsList, setTransactionsList] = useState({
     isLoaded: false,
-    data: [
-      {
-        id:1,
-        name: "Hat",
-        date: "21-11-2022",
-        day: 21,
-        value: -100.00
-      },
-      {
-        id:2,
-        name: "T-shirt",
-        date: "22-11-2022",
-        day: 22,
-        value: -70.99
-      },
-    ]
+    data: []
   });
   const [transaction, setTransaction] = useState({
     name: "",
@@ -129,6 +114,7 @@ const TransactionView = () => {
         setCategory(categoryInfo);
         setTransactionsList({isLoaded: true, data: transactions.sort(comparator)});
       })
+    // eslint-disable-next-line
   }, [])
 
   const handleAddTransaction = () => {
@@ -203,6 +189,7 @@ const TransactionView = () => {
         else if (tempTransaction.day < 1)
           tempTransaction.day = "";
         break;
+      default:
     }
     setTransaction(tempTransaction);
   }

@@ -6,25 +6,24 @@ import "../css/components/Navigation.css";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Link} from 'react-router-dom';
 import Hidden from "@material-ui/core/Hidden";
-import {loggedOutMessage} from "../assets/properties";
+import {authTokenName, loggedOutMessage} from "../assets/properties";
 
 const dataForList = [
   {
     text: "Transactions",
     icon: <div className="IconBox"><FontAwesomeIcon icon={faWallet}/></div>,
     index: 1,
-    link: "categories"
+    link: "/categories"
   },
   {
     text: "Budgets",
     icon: <div className="IconBox"><FontAwesomeIcon icon={faPiggyBank}/></div>,
     index: 2,
-    link: "budgets"
+    link: "/budgets"
   },
   {
     text: "Log out",
     icon: <div className="IconBox"><FontAwesomeIcon icon={faSignOutAlt}/></div>,
-    index: 3,
   }
 ]
 
@@ -54,6 +53,7 @@ const Navigation = (props) => {
   const classes = useStyles();
 
   function handleLoggedOut() {
+    localStorage.removeItem(authTokenName);
     setLogged(() => ({
       redirect: true,
       message: loggedOutMessage

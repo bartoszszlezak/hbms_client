@@ -102,30 +102,32 @@ const BudgetsView = () => {
         })
 
         axios.get(getBudgetsURL + date, jwtConfig)
-            .then(resp => {
-                let budgets = resp.data.map(budget => {
-                    budget.value = parseFloat(budget.value).toFixed(2);
-                    budget.spentValue = budget.spentValue < 0 ? (parseFloat(budget.value) + parseFloat(budget.spentValue)).toFixed(2) : (budget.value);
-                    budget.progress = ((parseFloat(budget.value) - parseFloat(budget.spentValue)) / parseFloat(budget.value)) * 100;
-                    budget.progress = budget.progress > 100 ? 100 : budget.progress;
-                    return {...budget}
-                })
+          .then(resp => {
+              let budgets = resp.data.map(budget => {
+                  budget.value = parseFloat(budget.value).toFixed(2);
+                  budget.spentValue = budget.spentValue < 0 ? (parseFloat(budget.value) + parseFloat(budget.spentValue)).toFixed(2) : (budget.value);
+                  budget.progress = ((parseFloat(budget.value) - parseFloat(budget.spentValue)) / parseFloat(budget.value)) * 100;
+                  budget.progress = budget.progress > 100 ? 100 : budget.progress;
+                  return {...budget}
+              })
 
-                setBudgetsList({
-                    isLoaded: true,
-                    data: [...budgets]
-                })
-            })
-            .catch(() => {
-                setIsPremiumUser(false)
-            })
+              setBudgetsList({
+                  isLoaded: true,
+                  data: [...budgets]
+              })
+          })
+          .catch(() => {
+              setIsPremiumUser(false)
+          })
+        // eslint-disable-next-line
     }, [date])
 
     useEffect(() => {
         axios.get(getCategoryTypesURL, jwtConfig)
-            .then(resp => {
-                setCategoriesTypes(resp.data);
-            })
+          .then(resp => {
+              setCategoriesTypes(resp.data);
+          })
+        // eslint-disable-next-line
     }, [])
 
     function handleAddBudget() {
@@ -135,18 +137,18 @@ const BudgetsView = () => {
                 date: date,
                 value: selectedBudgetValue,
             }, jwtConfig)
-                .then(resp => {
-                    let data = resp.data;
-                    data.value = parseFloat(data.value).toFixed(2);
-                    data.spentValue = data.spentValue < 0 ? (parseFloat(data.value) + parseFloat(data.spentValue)).toFixed(2) : data.value;
-                    data.progress = (((parseFloat(data.value) - parseFloat(data.spentValue)) / parseFloat(data.value)) * 100);
-                    data.progress = data.progress > 100 ? 100 : data.progress;
-                    setBudgetsList(prev => ({
-                        isLoaded: true,
-                        data: [...prev.data, data]
+              .then(resp => {
+                  let data = resp.data;
+                  data.value = parseFloat(data.value).toFixed(2);
+                  data.spentValue = data.spentValue < 0 ? (parseFloat(data.value) + parseFloat(data.spentValue)).toFixed(2) : data.value;
+                  data.progress = (((parseFloat(data.value) - parseFloat(data.spentValue)) / parseFloat(data.value)) * 100);
+                  data.progress = data.progress > 100 ? 100 : data.progress;
+                  setBudgetsList(prev => ({
+                      isLoaded: true,
+                      data: [...prev.data, data]
 
-                    }))
-                })
+                  }))
+              })
 
             setOpen(false);
             setSelectedBudget([])
@@ -159,9 +161,9 @@ const BudgetsView = () => {
     function handleDeleteBudget(id) {
         if (window.confirm(confirmDeleteMessage)) {
             axios.delete(deleteBudgetURL + id, jwtConfig)
-                .then(() => {
-                    setBudgetsList(prev => ({...prev, data: prev.data.filter(b => b.id !== id)}))
-                })
+              .then(() => {
+                  setBudgetsList(prev => ({...prev, data: prev.data.filter(b => b.id !== id)}))
+              })
         }
     }
 
@@ -181,120 +183,120 @@ const BudgetsView = () => {
 
 
     return (
-        <div>
-            {
-                !isPremiumUser ?
-                    <Paper elevation={5} classes={{root: classes.card}}>
-                        <div style={{
-                            width: "100%",
-                            paddingTop: "4em",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center"
-                        }}>
-                            <PanToolIcon style={{fontSize: 100}}/>
-                            <div>For Premium Users Only!</div>
-                        </div>
-                    </Paper>
-                    :
-                    <Paper elevation={5} classes={{root: classes.card}}>
-                        <div className={classes.cardHeader}>
-                            <TextField
-                                id="date"
-                                type="month"
-                                value={date}
-                                onChange={event => setDate(event.target.value)}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                            <Button
-                                variant="contained"
-                                classes={{root: classes.addButton}}
-                                color="primary"
-                                startIcon={<FontAwesomeIcon icon={faPlus}/>}
-                                onClick={() => setOpen(true)}
-                            >
-                                Add Budget
-                            </Button>
-                            <Dialog open={open} onClose={handleClose} classes={{paper: classes.dialog}}>
-                                <DialogTitle id="form-dialog-title">Add Budget</DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText>
-                                        Create a budget. Set budget name and goal.
-                                    </DialogContentText>
-                                    <Select
-                                        labelId="select"
-                                        id="categorySelect"
-                                        value={selectedBudget}
-                                        onChange={event => {
-                                            setSelectedBudget(event.target.value)
-                                        }}
-                                        style={{width: "100%"}}
-                                        classes={{root: classes.select}}
-                                    >
-                                        {
-                                            categoriesTypes.map((category, index) => (
-                                                <MenuItem key={index} value={category}>
-                                                    <ListItemAvatar>
-                                                        <Avatar classes={{root: classes.avatar}}
-                                                                style={{background: category.color}}>
-                                                            <FontAwesomeIcon icon={iconPicker(category.icon)}
-                                                                             style={{color: "#ffffff"}}/>
-                                                        </Avatar>
-                                                    </ListItemAvatar>
-                                                    {category.name}
-                                                </MenuItem>
-                                            ))
-                                        }
-                                    </Select>
-                                    <TextField id="BudgetGoal" className="TextInput" label="Value" variant="outlined"
-                                               type="number"
-                                               value={selectedBudgetValue}
-                                               onChange={event => setSelectedBudgetValue(event.target.value)}
-                                               onBlur={validateInput}
-                                               classes={{root: classes.dialogInputs}}/>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={handleClose} color="primary">
-                                        Cancel
-                                    </Button>
-                                    <Button onClick={handleAddBudget} color="primary">
-                                        Confirm
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
-                        </div>
-                        <Divider/>
-                        <List classes={{root: classes.list}}>
-                            {
-                                !budgetsList.isLoaded ?
-                                    <div style={{width: "100%", display: "flex", justifyContent: "center"}}>
-                                        <CircularProgress size={100} thickness={5}/>
-                                    </div>
-                                    :
-                                    budgetsList.data.length === 0 ?
-                                        <div style={{
-                                            width: "100%",
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            alignItems: "center"
-                                        }}>
-                                            <SentimentDissatisfiedIcon style={{fontSize: 100}}/>
-                                            <div>No Data</div>
-                                        </div>
-                                        :
-                                        budgetsList.data.map((budget, index) =>
-                                            <Budget
-                                                key={index}
-                                                data={budget}
-                                                handleDeleteBudget={handleDeleteBudget}
-                                            />)
-                            }
-                        </List>
-                    </Paper>
-            }
-        </div>
+      <div>
+          {
+              !isPremiumUser ?
+                <Paper elevation={5} classes={{root: classes.card}}>
+                    <div style={{
+                        width: "100%",
+                        paddingTop: "4em",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center"
+                    }}>
+                        <PanToolIcon style={{fontSize: 100}}/>
+                        <div>For Premium Users Only!</div>
+                    </div>
+                </Paper>
+                :
+                <Paper elevation={5} classes={{root: classes.card}}>
+                    <div className={classes.cardHeader}>
+                        <TextField
+                          id="date"
+                          type="month"
+                          value={date}
+                          onChange={event => setDate(event.target.value)}
+                          InputLabelProps={{
+                              shrink: true,
+                          }}
+                        />
+                        <Button
+                          variant="contained"
+                          classes={{root: classes.addButton}}
+                          color="primary"
+                          startIcon={<FontAwesomeIcon icon={faPlus}/>}
+                          onClick={() => setOpen(true)}
+                        >
+                            Add Budget
+                        </Button>
+                        <Dialog open={open} onClose={handleClose} classes={{paper: classes.dialog}}>
+                            <DialogTitle id="form-dialog-title">Add Budget</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Create a budget. Set budget name and goal.
+                                </DialogContentText>
+                                <Select
+                                  labelId="select"
+                                  id="categorySelect"
+                                  value={selectedBudget}
+                                  onChange={event => {
+                                      setSelectedBudget(event.target.value)
+                                  }}
+                                  style={{width: "100%"}}
+                                  classes={{root: classes.select}}
+                                >
+                                    {
+                                        categoriesTypes.map((category, index) => (
+                                          <MenuItem key={index} value={category}>
+                                              <ListItemAvatar>
+                                                  <Avatar classes={{root: classes.avatar}}
+                                                          style={{background: category.color}}>
+                                                      <FontAwesomeIcon icon={iconPicker(category.icon)}
+                                                                       style={{color: "#ffffff"}}/>
+                                                  </Avatar>
+                                              </ListItemAvatar>
+                                              {category.name}
+                                          </MenuItem>
+                                        ))
+                                    }
+                                </Select>
+                                <TextField id="BudgetGoal" className="TextInput" label="Value" variant="outlined"
+                                           type="number"
+                                           value={selectedBudgetValue}
+                                           onChange={event => setSelectedBudgetValue(event.target.value)}
+                                           onBlur={validateInput}
+                                           classes={{root: classes.dialogInputs}}/>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleClose} color="primary">
+                                    Cancel
+                                </Button>
+                                <Button onClick={handleAddBudget} color="primary">
+                                    Confirm
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                    </div>
+                    <Divider/>
+                    <List classes={{root: classes.list}}>
+                        {
+                            !budgetsList.isLoaded ?
+                              <div style={{width: "100%", display: "flex", justifyContent: "center"}}>
+                                  <CircularProgress size={100} thickness={5}/>
+                              </div>
+                              :
+                              budgetsList.data.length === 0 ?
+                                <div style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center"
+                                }}>
+                                    <SentimentDissatisfiedIcon style={{fontSize: 100}}/>
+                                    <div>No Data</div>
+                                </div>
+                                :
+                                budgetsList.data.map((budget, index) =>
+                                  <Budget
+                                    key={index}
+                                    data={budget}
+                                    handleDeleteBudget={handleDeleteBudget}
+                                  />)
+                        }
+                    </List>
+                </Paper>
+          }
+      </div>
     )
 }
 

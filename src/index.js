@@ -1,31 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import LoginView from "./views/LoginView";
 import RegistrationView from "./views/RegistrationView";
 import "./index.css"
 import Error404 from "./views/Error404";
 import WithContainer from "./views/WithContainer";
-import CategoriesView from "./views/CategoriesView";
-import TransactionView from "./views/TransactionsView";
-import BudgetsView from "./views/BudgetsView";
+import {loggedRoutesPaths} from "./assets/properties";
 
 ReactDOM.render(
   <BrowserRouter>
-    <Routes>
-      <Route>
-        <Route index element={<LoginView/>}/>
-        <Route path="registration" element={<RegistrationView/>}/>
-        <Route path="user" element={<WithContainer/>}>
-          <Route path="categories" element={<CategoriesView/>}/>
-          <Route path="transactions" element={<TransactionView/>}/>
-          <Route path="budgets" element={<BudgetsView/>}/>
-        </Route>
-        <Route path="*" element={<Error404/>}/>
-      </Route>
-
-    </Routes>
+    <Switch>
+      <Route exact path="/" render={(props) => <LoginView {...props}/>}/>
+      <Route exact path="/registration" component={RegistrationView}/>
+      <Route exact path={loggedRoutesPaths} component={WithContainer}/>
+      <Route exact path="/*" component={Error404}/>
+    </Switch>
   </BrowserRouter>,
   document.getElementById('root')
 );

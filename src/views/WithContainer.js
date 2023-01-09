@@ -2,9 +2,12 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import React, {useEffect, useState} from "react";
 import Navigation from "../components/Navigation";
 import Header from "../components/Header";
-import {Navigate, Outlet} from "react-router-dom";
+import {Redirect, Route} from "react-router-dom";
+import CategoriesView from "./CategoriesView";
+import TransactionView from "./TransactionsView";
+import BudgetsView from "./BudgetsView";
 import axios from "axios";
-import {authTokenName, getLoggedUsernameUrl, unauthorizedMessage} from "../assets/properties";
+import {getLoggedUsernameUrl, authTokenName, unauthorizedMessage} from "../assets/properties";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const WithContainer = () => {
+const WithContainer = (props) => {
   const classes = useStyles();
   const [loggedUsername, setLoggedUsername] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -30,47 +33,70 @@ const WithContainer = () => {
     redirect: false,
     message: ""
   });
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
   const jwtConfig = {
     headers: {
       Authorization: "Bearer " + localStorage.getItem(authTokenName)
     }
   };
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
-  // Get jwt token
+  const viewProps = () => {
+    switch (props.match.path) {
+      case "/categories":
+        return {selectedNavItem: 1, headerName: "Transactions"};
+      case "/budgets":
+        return {selectedNavItem: 2, headerName: "Budgets"};
+      case "/summary":
+        return {selectedNavItem: 3, headerName: "Summary"};
+      default:
+        return {selectedNavItem: 1, headerName: "Transactions"};
+    }
+  }
+
   useEffect(() => {
     axios.get(getLoggedUsernameUrl, jwtConfig)
       .then(resp => setLoggedUsername(resp.data.username))
       .catch(() => {
         setLogged(() => ({
-          redirect: false,
+          redirect: true,
           message: unauthorizedMessage
         }));
       })
+    // eslint-disable-next-line
   }, [])
 
   return (
     logged.redirect ?
-        <Navigate to="/"/>
+      <Redirect to={{pathname: "/", message: logged.message}}/>
       :
-    <div className={classes.container}>
-      <Navigation data={{
-        selected: 1,
-        mobileOpen: mobileOpen,
-        handleDrawerToggle: handleDrawerToggle,
-        setLogged: setLogged
-      }}/>
-      <Header data={{
-        title: "Transactions",
-        handleDrawerToggle: handleDrawerToggle,
-        username: loggedUsername
-      }}/>
-      <Outlet context={{logged, setLogged, setLoggedUsername}}/>
-    </div>
+      <div className={classes.container}>
+        <Navigation data={{
+          selected: viewProps().selectedNavItem,
+          mobileOpen: mobileOpen,
+          handleDrawerToggle: handleDrawerToggle,
+          setLogged: setLogged
+        }}/>
+        <Header data={{
+          title: viewProps().headerName,
+          handleDrawerToggle: handleDrawerToggle,
+          username: loggedUsername
+        }}/>
+        <Route
+          exact
+          path="/categories"
+          render={props => <CategoriesView {...props} setLogged={setLogged}/>}
+        />
+        <Route
+          exact
+          path="/transactions/:id"
+          render={props => <TransactionView {...props} setLogged={setLogged}/>}/>
+        <Route
+          exact
+          path="/budgets"
+          render={props => <BudgetsView {...props} setLogged={setLogged}/>}/>
+      </div>
   )
 }
 

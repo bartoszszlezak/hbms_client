@@ -85,51 +85,28 @@ const CategoriesView = (props) => {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [categoriesTypes, setCategoriesTypes] = useState([]);
   const [categories, setCategories] = useState({
-    isLoaded: true,
-    data: [
-      {
-        icon: "faShoppingCart",
-        color: "#F8A648",
-        typeName: "Shopping",
-        transactionsValue: -1000.0
-      },
-      {
-        icon: "faSmileBeam",
-        color: "#4848F8",
-        typeName: "Entertainment",
-        transactionsValue: -1000.0
-      },
-      {
-        icon: "faPlane",
-        color: "#38C21E",
-        typeName: "Travel",
-        transactionsValue: -500.0
-      }
-    ]
+    isLoaded: false,
+    data: []
   });
   const jwtConfig = {
     headers: {
       Authorization: "Bearer " + localStorage.getItem(authTokenName)
     }
   };
-
-  //todo
-  const [date, setDate] = useState("")
-  // const [date, setDate] = useState(() => {
-  //   if (props.location.initialDate) {
-  //     return props.location.initialDate;
-  //   }
-  //   const now = new Date();
-  //   const month = (now.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2})
-  //   return now.getFullYear() + "-" + month;
-  // });
+  const [date, setDate] = useState(() => {
+    if (props.location.initialDate) {
+      return props.location.initialDate;
+    }
+    const now = new Date();
+    const month = (now.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2})
+    return now.getFullYear() + "-" + month;
+  });
 
   useEffect(() => {
     setCategories({
       isLoaded: false,
       data: []
     });
-
     axios.get(getCategoriesURL + date, jwtConfig)
       .then(resp => {
         setCategories({
@@ -137,6 +114,7 @@ const CategoriesView = (props) => {
           data: resp.data.map(el => ({...el, transactionsValue: el.transactionsValue.toFixed(2)}))
         });
       })
+    // eslint-disable-next-line
   }, [date])
 
   useEffect(() => {
@@ -144,6 +122,7 @@ const CategoriesView = (props) => {
       .then(resp => {
         setCategoriesTypes(resp.data);
       })
+    // eslint-disable-next-line
   }, [])
 
   const handleAddCategory = () => {
